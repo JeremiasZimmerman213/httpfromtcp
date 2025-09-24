@@ -31,20 +31,15 @@ func getLinesChannel(f io.ReadCloser) <-chan string {
 			str += string(data)
 
 			// Check for complete lines (ending with \n)
-			for {
-				if i := bytes.IndexByte([]byte(str), '\n'); i != -1 {
-					// Found a complete line
-					line := str[:i]
-					out <- line
-					str = str[i+1:] // Remove the processed line including \n
-				} else {
-					// No more complete lines in current buffer
-					break
-				}
+			if i := bytes.IndexByte([]byte(str), '\n'); i != -1 {
+				// Found a complete line
+				line := str[:i]
+				out <- line
+				str = str[i+1:] // Remove the processed line including \n
 			}
 		}
 	}()
-	
+
 	return out
 }
 
